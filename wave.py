@@ -1,8 +1,13 @@
 import math
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
+import PyQt5
 from scipy import signal
+import pyformulas as pf
 from pygame.sndarray import make_sound
+
+matplotlib.use("Qt5agg")
 
 from theory import *
 
@@ -22,6 +27,7 @@ def generate_note(freq_hz, duration_ms, wave_type):
     MAX_NOTES_AT_ONCE = 4  # must divide amplitude by this much to prevent distortion
     if wave_type == 'square':
         wave = signal.square(2 * np.pi * freq_hz * t) * 0.3
+
     elif wave_type == 'sawtooth':
         wave = signal.sawtooth(2 * np.pi * freq_hz * t) * 0.4
     elif wave_type == 'triangle':
@@ -53,10 +59,16 @@ def play_chord(freqs, waveform):
     return chord_wave
 
 
-def plot(ts, ys, title, time_samples):
-    fig, (ax1, ax2) = plt.subplots(1, 2)
-    fig.suptitle(title)
+plt.ion()
+fig, (ax1, ax2) = plt.subplots(1, 2)
+line1, = ax1.plot(0, 0, 'r-')  # Returns a tuple of line objects, thus the comma
+line2, = ax2.plot(0, 0, 'r-')  # Returns a tuple of line objects, thus the comma
+plt.draw()
 
+
+def plot(ts, ys, title, time_samples):
+    fig.suptitle(title)
+    ax1.clear()
     ax1.plot(ts[:time_samples], ys[:time_samples])
 
     fourier = np.fft.fft(ys)
@@ -65,14 +77,10 @@ def plot(ts, ys, title, time_samples):
     frequency = np.fft.fftfreq(ys.shape[-1], d=(1.0/SAMPLE_RATE))
     data_start = 0
     data_end = 250
-
     plot_freq = frequency[data_start:data_end:1]
     plot_fourier = fourier.real[data_start:data_end:]
+    ax2.clear()
     ax2.plot(plot_freq, plot_fourier)
 
-
-def plot_chord(wave, label):
-    if wave is not None:
-        plt.close()
-        plot(get_sample_times(), wave, label, 400)
-        plt.show()
+    fig.canvas.draw_idle()
+    fig.canvas.flush_events()

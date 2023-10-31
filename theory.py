@@ -34,7 +34,7 @@ chords = {
     }, 7: {
         'steps': 11,
         'label': 'viiø',
-        'type': 'half dim.',
+        'type': 'half diminished',
     }, 8: {
         'steps': 12,
         'label': 'I',
@@ -55,7 +55,7 @@ def check_chord_swap(diatonic_type, swapped):
 
 
 
-def get_chord_steps(chord_num, inversion_num=0, seventh=False, maj_minor_swap=False):
+def get_chord_steps(chord_num, inversion_num=0, seventh=False, maj_minor_swap=False, diminish=False):
     type = check_chord_swap(chords[chord_num]['type'], maj_minor_swap)
     steps_root = 0
     if type == 'major':
@@ -69,7 +69,7 @@ def get_chord_steps(chord_num, inversion_num=0, seventh=False, maj_minor_swap=Fa
         steps_3rd = 3
         steps_5th = 7
         steps_7th = 10
-    else:  # half diminished
+    else:  # half diminished based on being ii7
         steps_3rd = 3
         steps_5th = 6
         steps_7th = 10
@@ -80,6 +80,10 @@ def get_chord_steps(chord_num, inversion_num=0, seventh=False, maj_minor_swap=Fa
         steps_3rd += 12
     if inversion_num >= 3:
         steps_5th += 12
+
+    if diminish:
+        steps_root += 1
+        steps_7th = 10
 
     steps = [steps_root, steps_3rd, steps_5th]
     if seventh:
