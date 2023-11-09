@@ -1,6 +1,7 @@
 # chord_physics
 A little Pygame application that makes it easy to play chords and experiment with music theory.
 I gave it sliders and toggles to control the key, octave, chord, and more settings.
+
 ![image](https://github.com/nerdcringe/chord_physics/assets/54510965/e5eddb9b-c98c-4c81-a37e-45d97b5cb99e)
 
 For fun, I tried it out using different waveforms
